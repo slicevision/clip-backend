@@ -7,10 +7,10 @@ import os
 import uuid
 
 app = Flask(__name__)
-CORS(app, origins=["https://slice-vision-streamer.lovable.app"])  # Update origin if needed
+CORS(app, origins=["*"])  # Puoi restringere se vuoi
 
 @app.route("/")
-def home():
+def index():
     return "FFmpeg clip backend is running!"
 
 @app.route("/clip", methods=["POST"])
@@ -50,9 +50,7 @@ def clip_video():
             "copy", output_path
         ], check=True)
 
-        return send_file(output_path,
-                         as_attachment=True,
-                         download_name="clip.mp4")
+        return send_file(output_path, as_attachment=True, download_name="clip.mp4")
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
