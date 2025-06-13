@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file 
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import tempfile
 import subprocess
@@ -7,13 +7,13 @@ import os
 import uuid
 
 app = Flask(__name__)
-CORS(app, origins=["https://slice-vision-streamer.lovable.app"])
+CORS(app, origins=["https://slice-vision-streamer.lovable.app"])  # Update origin if needed
 
-@app.route('/')
-def hello():
+@app.route("/")
+def home():
     return "FFmpeg clip backend is running!"
 
-@app.route('/clip', methods=['POST'])
+@app.route("/clip", methods=["POST"])
 def clip_video():
     data = request.json
     source_url = data.get("source_url")
@@ -24,7 +24,7 @@ def clip_video():
 
     try:
         input_path = f"/tmp/input_{uuid.uuid4()}.mp4"
-        with open(input_path, 'wb') as f:
+        with open(input_path, "wb") as f:
             f.write(requests.get(source_url).content)
 
         segment_paths = []
