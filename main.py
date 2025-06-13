@@ -1,13 +1,13 @@
-import subprocess
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import tempfile
+import subprocess
 import requests
 import os
 import uuid
 
 app = Flask(__name__)
-CORS(app)  # ✅ Abilita CORS per tutte le origini
+CORS(app, origins=["https://slice-vision-streamer.lovable.app"])  # ✅ CORS fix
 
 @app.route('/')
 def hello():
@@ -23,12 +23,10 @@ def clip_video():
         return jsonify({"error": "Missing source_url or clips"}), 400
 
     try:
-        # Download original video
         input_path = f"/tmp/input_{uuid.uuid4()}.mp4"
         with open(input_path, 'wb') as f:
             f.write(requests.get(source_url).content)
 
-        # Cut and merge clips
         segment_paths = []
         for i, clip in enumerate(clips):
             start = clip["startTime"]
@@ -41,7 +39,6 @@ def clip_video():
             ], check=True)
             segment_paths.append(segment_path)
 
-        # Create list.txt for ffmpeg concat
         list_path = "/tmp/list.txt"
         with open(list_path, "w") as f:
             for path in segment_paths:
