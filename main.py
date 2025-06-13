@@ -1,11 +1,13 @@
 import subprocess
 from flask import Flask, request, jsonify, send_file
+from flask_cors import CORS
 import tempfile
 import requests
 import os
 import uuid
 
 app = Flask(__name__)
+CORS(app)  # ✅ Abilita CORS per tutte le origini
 
 @app.route('/')
 def hello():
@@ -59,5 +61,4 @@ def clip_video():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=3000)
