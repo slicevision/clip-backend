@@ -1,17 +1,13 @@
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
-import tempfile
-import subprocess
-import requests
-import os
-import uuid
+import subprocess, requests, uuid
 
 app = Flask(__name__)
 CORS(app, origins=["https://slice-vision-streamer.lovable.app"])
 
 @app.route('/')
 def hello():
-    return "✅ Backend is running!"
+    return "FFmpeg clip backend is running!"
 
 @app.route('/clip', methods=['POST'])
 def clip_video():
@@ -56,4 +52,3 @@ def clip_video():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
