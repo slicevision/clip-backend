@@ -23,8 +23,10 @@ def clip_video():
     try:
         # Download original video
         input_path = f"/tmp/input_{uuid.uuid4()}.mp4"
+        r = requests.get(source_url, timeout=30)
+        r.raise_for_status()
         with open(input_path, 'wb') as f:
-            f.write(requests.get(source_url).content)
+            f.write(r.content)
 
         # Cut and merge clips
         segment_paths = []
@@ -55,8 +57,12 @@ def clip_video():
                          as_attachment=True,
                          download_name="clip.mp4")
 
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": f"Download failed: {str(e)}"}), 400
+    except subprocess.CalledProcessError as e:
+        return jsonify({"error": f"FFmpeg error: {str(e)}"}), 500
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=3000)
