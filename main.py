@@ -7,7 +7,7 @@ import os
 import uuid
 
 app = Flask(__name__)
-CORS(app, origins=["https://slice-vision-streamer.lovable.app"])  # ✅ CORS fix
+CORS(app, origins=["https://slice-vision-streamer.lovable.app"])
 
 @app.route('/')
 def hello():
@@ -56,4 +56,3 @@ def clip_video():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
