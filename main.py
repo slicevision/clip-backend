@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify, send_file
 import os
 import subprocess
 import uuid
+import shutil
+print("FFmpeg path:", shutil.which("ffmpeg"))
 
 app = Flask(__name__)
 
