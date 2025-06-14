@@ -2,5 +2,5 @@
   "build": {
     "builder": "nixpacks"
   },
-  "start": "python main.disabled.py"
+  "start": "python main.py"
 }
