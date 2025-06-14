@@ -1,15 +1,30 @@
 { pkgs }:
 
 let
-  pythonEnv = pkgs.python311.withPackages (ps: with ps; [
+  python = pkgs.python311;
+  pythonEnv = python.withPackages (ps: with ps; [
     flask
     flask_cors
     requests
     gunicorn
   ]);
-in {
-  deps = [
-    pkgs.ffmpeg
-    pythonEnv
-  ];
+in
+pkgs.stdenv.mkDerivation {
+  name = "clip-backend";
+
+  buildInputs = [ pythonEnv pkgs.ffmpeg ];
+
+  unpackPhase = "true";
+  installPhase = ''
+    mkdir -p $out
+    cp -r . $out/
+  '';
+
+  # Explicit start command
+  shellHook = ''
+    export PATH=${pythonEnv}/bin:$PATH
+  '';
+
+  # Railway will run this to start the service
+  start = "python main.py";
 }
